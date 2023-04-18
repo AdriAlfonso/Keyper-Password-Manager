@@ -1,33 +1,40 @@
 import tkinter as tk
 from tkinter import messagebox
+from passwords import PasswordsWindow
 
-def check_password(event=None):
-    password = "mypassword" 
-    if password == password_entry.get():
-        # Future commits
-        messagebox.showinfo("Login Succesful",  "Welcome to Keyper!")
-        pass
-    else:
-        messagebox.showerror("Access Denied", "Incorrect Password. Try again.")
-        password_entry.delete(0, tk.END)  # Delete the content of 'password_entry'
+class Login(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        
+        # Set a title and geometry
+        self.title("Keyper")
+        self.geometry("250x100")
 
-# Creates the TKinter window
-root = tk.Tk()
-root.title("Keyper") 
-root.geometry("250x100")
+        # Creates the password field
+        password_label = tk.Label(self, text="Introduce your password:")
+        password_label.pack()
+        self.password_entry = tk.Entry(self, show="*")
+        self.password_entry.pack()
 
-# Creates the password field
-password_label = tk.Label(root, text="Introduce your password:")
-password_label.pack()
-password_entry = tk.Entry(root, show="*")
-password_entry.pack()
+        # Creates the login button
+        login_button = tk.Button(self, text="Login", command=self.check_password)
+        login_button.pack()
 
-# Creates the login button
-login_button = tk.Button(root, text="Login", command=check_password)
-login_button.pack()
+        # The user can login directly with the <Return> button 
+        self.bind("<Return>", self.check_password)
+    
+    def open_passwords_window(self):
+        # Creates a new instance of PasswordsWindow
+        passwords_window = PasswordsWindow(self)
+    
+    def check_password(self, event=None):
+        password = "mypassword" 
+        if password == self.password_entry.get():
+            self.open_passwords_window()
+        else:
+            messagebox.showerror("Access Denied", "Incorrect Password. Try again.")
+            self.password_entry.delete(0, tk.END)  # Delete the content of 'password_entry'
 
-# The user can login directly with the <Return> button 
-root.bind("<Return>", check_password)
-
-# Executes the TKinter window
-root.mainloop()
+# Creates the first instance of Login
+loginWindow = Login()
+loginWindow.mainloop()
