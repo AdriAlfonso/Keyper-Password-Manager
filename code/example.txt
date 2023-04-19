@@ -1,6 +1,0 @@
-"Instagram": "abc123"
-"Facebook": "123avf"
-"Twitter": "qwerty"
-"Gmail": "password123"
-"Github": "gewrtr222"
-"Ask": "67hwer"
