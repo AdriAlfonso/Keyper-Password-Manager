@@ -5,4 +5,20 @@ class PasswordsWindow(tk.Toplevel):
         super().__init__(master)
         
         self.title("PasswordsWindow")
-        self.geometry("200x150")
+        self.geometry("300x200")
+
+        # Passwords data
+        self.passwords = {
+            "Instagram": "abc123",
+            "Facebook": "123avf",
+            "Twitter": "qwerty",
+            "Gmail": "password123"
+        }
+
+        # Widget Text (show the passwords)
+        self.text_widget = tk.Text(self)
+        self.text_widget.pack(expand=True, fill='both')
+
+        # Fill the widget text with passwords data
+        for service, password in self.passwords.items():
+            self.text_widget.insert('end', f"{service}: {password}\n")
