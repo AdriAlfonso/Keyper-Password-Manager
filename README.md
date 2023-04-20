@@ -2,9 +2,9 @@
 The app that keeps all your passwords safe! Keyper is a simple password manager built with Python and Tkinter. It allows users to store and manage their passwords in a secure and organized way.
 
   * Features
-    * Securely stores and manages passwords.
-    * Simple and user-friendly interface.
-    * Uses SQLite database for storing passwords.
+    * [✅] Securely stores and manages passwords.
+    * [✅] Simple and user-friendly interface.
+    * [✅] Uses SQLite database for storing passwords.
 
   * Installation
     * To use Keyper, you need to have Python 3.x installed on your system.
