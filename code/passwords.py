@@ -1,23 +1,28 @@
+import sqlite3
 import tkinter as tk
-
-# Change the path
-FILENAME = "C:/Users/adria/OneDrive/Escritorio/Keyper/code/example.txt"
 
 class PasswordsWindow(tk.Toplevel):
     def __init__(self, master):
         super().__init__(master)
-        
+
+        # Set a title and geometry
         self.title("PasswordsWindow")
         self.geometry("250x450")
-        
+
         # The user cannot resize the window
         self.resizable(False, False)
+
+        # Connect to the database
+        self.conn = sqlite3.connect('passwords.db')
+
+        # Create the table if it doesn't exist
+        self.create_table()
 
         # Passwords data
         self.passwords = {}
 
-        # Read passwords from file
-        self.read_passwords_from_file()
+        # Read passwords from the 'passwords.db'
+        self.read_passwords_from_db()
 
         # Text widget (show the passwords)
         self.text_widget = tk.Text(self)
@@ -29,29 +34,38 @@ class PasswordsWindow(tk.Toplevel):
 
         # Save button
         self.save_button = tk.Button(self, text="Save", command=self.save_passwords)
-        self.save_button.pack(side='bottom', fill = 'x',  padx=10, pady=10)
+        self.save_button.pack(side='bottom', fill='x', padx=10, pady=10)
 
-    def read_passwords_from_file(self):
-        global FILENAME
-        with open(FILENAME, "r") as f:
-            for line in f:
-                line = line.strip()  # Remove whitespace and newline characters
-                if line:  
-                    service, password = line.split(":")
-                    service = service.strip().strip('"')
-                    password = password.strip().strip('"')
-                    self.passwords[service] = password
+    def create_table(self):
+        c = self.conn.cursor()
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS passwords (
+                service TEXT PRIMARY KEY,
+                password TEXT NOT NULL
+            )
+        """)
+        self.conn.commit()
+
+    def read_passwords_from_db(self):
+        c = self.conn.cursor()
+        c.execute("SELECT * FROM passwords")
+        rows = c.fetchall()
+        for row in rows:
+            service, password = row
+            self.passwords[service] = password
 
     def save_passwords(self):
-        global FILENAME
-        with open(FILENAME, "w") as f:
-            # Get the content of the Text Widget
-            content = self.text_widget.get("1.0", "end").strip()
+        c = self.conn.cursor()
 
-            # Split the lines of the Text Widget
-            lines = content.splitlines()
+        # Delete all existing passwords
+        c.execute("DELETE FROM passwords")
 
-            # Write each line in the .txt
-            for line in lines:
-                f.write(line + "\n")
-
+        # Insert the new passwords
+        content = self.text_widget.get("1.0", "end").strip()
+        lines = content.splitlines()
+        for line in lines:
+            service, password = line.split(":")
+            service = service.strip()
+            password = password.strip()
+            c.execute("INSERT INTO passwords (service, password) VALUES (?, ?)", (service, password))
+        self.conn.commit()

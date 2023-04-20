@@ -39,6 +39,10 @@ class Login(tk.Tk):
             messagebox.showerror("Access Denied", "Incorrect Password. Try again.")
             self.password_entry.delete(0, tk.END)  # Delete the content of 'password_entry'
 
-# Creates the first instance of Login
-loginWindow = Login()
-loginWindow.mainloop()
+def main():
+    # Creates the first instance of Login
+    loginWindow = Login()
+    loginWindow.mainloop()
+
+if __name__ == "__main__":
+    main()
